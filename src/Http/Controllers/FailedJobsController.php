@@ -100,9 +100,13 @@ class FailedJobsController extends Controller
      */
     public function show($id)
     {
-        return (array) $this->jobs->getJobs([$id])->map(function ($job) {
+        $jobs = (array) $this->jobs->getJobs([$id])->map(function ($job) {
             return $this->decode($job);
         })->first();
+
+        $jobs['payload']->data->command = unserialize($jobs['payload']->data->command);
+
+        return $jobs;
     }
 
     /**
